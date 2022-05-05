@@ -1,0 +1,251 @@
+apiVersion: charts.helm.k8s.io/v1
+kind: Xl
+metadata:
+  name: xl-release
+  namespace: turbonomic
+spec:
+  global:
+    tag: 8.5.5
+    logtostdout: true
+    externalSyslog: logdna
+  control:
+    enabled: false
+  nginxingress:
+    enabled: false
+  platform:
+    enabled: false
+  ui:
+    enabled: false
+
+  actionscript:
+    enabled: true
+  appdynamics:
+    enabled: true
+  aws:
+    enabled: true
+  azure:
+    enabled: true
+  datadog:
+    enabled: true
+  dynatrace:
+    enabled: true
+  horizon:
+    enabled: true
+  hyperv:
+    enabled: true
+  instana:
+    enabled: true
+  ucs:
+    enabled: true
+  vcenter:
+    enabled: true
+  vmm:
+    enabled: true
+
+  mediation-actionscript:
+    env:
+      - name: component_type
+        value: mediation-actionscript
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-appdynamics:
+    env:
+      - name: component_type
+        value: mediation-appdynamics
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-aws:
+    env:
+      - name: component_type
+        value: mediation-aws
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-awsbilling:
+    env:
+      - name: component_type
+        value: mediation-awsbilling
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-awscost:
+    env:
+      - name: component_type
+        value: mediation-awscost
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-azure:
+    env:
+      - name: component_type
+        value: mediation-azure
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-azurecost:
+    env:
+      - name: component_type
+        value: mediation-azurecost
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-azureea:
+    env:
+      - name: component_type
+        value: mediation-azureea
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-azuresp:
+    env:
+      - name: component_type
+        value: mediation-azuresp
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-azurevolumes:
+    env:
+      - name: component_type
+        value: mediation-azurevolumes
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-datadog:
+    env:
+      - name: component_type
+        value: mediation-datadog
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-dynatrace:
+    env:
+      - name: component_type
+        value: mediation-dynatrace
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-horizon:
+    env:
+      - name: component_type
+        value: mediation-horizon
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-hyperv:
+    env:
+      - name: component_type
+        value: mediation-hyperv
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-instana:
+    env:
+      - name: component_type
+        value: mediation-instana
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-netflow:
+    env:
+      - name: component_type
+        value: mediation-netflow
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-ucs:
+    env:
+      - name: component_type
+        value: mediation-ucs
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-vcenter:
+    env:
+      - name: component_type
+        value: mediation-vcenter
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-vcenterbrowsing:
+    env:
+      - name: component_type
+        value: mediation-vcenterbrowsing
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+  mediation-vmm:
+    env:
+      - name: component_type
+        value: mediation-vmm
+      - name: instance_id
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: standalone
+        value: "true"
+
+  properties:
+    global:
+      enableComponentStatusNotification: false
+      enableConsulMigration: false
+      enableConsulRegistration: false
+      serverAddress: ws://sre-tunnel-6b67c0e0209943de.secure-tunnel.svc.cluster.local:8080/remoteMediation
