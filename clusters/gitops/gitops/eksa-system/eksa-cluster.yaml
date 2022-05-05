@@ -1,0 +1,137 @@
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: Cluster
+metadata:
+  name: gitops
+  namespace: default
+spec:
+  clusterNetwork:
+    cniConfig:
+      cilium: {}
+    pods:
+      cidrBlocks:
+      - 192.168.1.0/16
+    services:
+      cidrBlocks:
+      - 10.96.0.0/12
+  controlPlaneConfiguration:
+    count: 3
+    endpoint:
+      host: 10.10.174.1
+    machineGroupRef:
+      kind: VSphereMachineConfig
+      name: gitops-cp
+  datacenterRef:
+    kind: VSphereDatacenterConfig
+    name: gitops
+  externalEtcdConfiguration:
+    count: 1
+    machineGroupRef:
+      kind: VSphereMachineConfig
+      name: gitops-etcd
+  gitOpsRef:
+    kind: GitOpsConfig
+    name: cluster-gitops
+  kubernetesVersion: "1.22"
+  managementCluster:
+    name: gitops
+  workerNodeGroupConfigurations:
+  - count: 6
+    machineGroupRef:
+      kind: VSphereMachineConfig
+      name: gitops
+    name: md-0
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereDatacenterConfig
+metadata:
+  name: gitops
+  namespace: default
+spec:
+  datacenter: Cloud
+  insecure: true
+  network: /Cloud/network/VM Network
+  server: vsphere-dc11.eng.vmturbo.com
+  thumbprint: ""
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereMachineConfig
+metadata:
+  annotations:
+    anywhere.eks.amazonaws.com/control-plane: "true"
+  name: gitops-cp
+  namespace: default
+spec:
+  datastore: /Cloud/datastore/PUREM10:DS01
+  diskGiB: 25
+  folder: ""
+  memoryMiB: 8192
+  numCPUs: 2
+  osFamily: bottlerocket
+  resourcePool: /Cloud/host/Physical/Resources
+  template: /Cloud/vm/Templates/bottlerocket-v1.22.6-kubernetes-1-22-eks-4-amd64-d1d3e65
+  users:
+  - name: ec2-user
+    sshAuthorizedKeys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCca0OQ0T6VTKiFkzy3Yco/oMZXfT2mEFDvgsIpkt6SJnbMFhoTGW9xze4aiqTnp0geLRgYh1xKKyiZzTr7yfjAD7p6O3ZF787oNNGB0p+xQvXyTfxLgYPdMWeJ2omtOqhvrs9WHbb69a/ZCOrGayGB6TGiiva0zSgkrxwCYPTAmVI+u3l1gSJIs+SZ6seK2jRqViMwuIz73oIcXWFct/Tj3CQuQPv053VCOpx44+7ybPf2J+FoI4v8T8MVp6Yg2Fuq8B/d0BpwWWZ1KHUwywf5oYAAd8Le2Z0R5ix4jj6V9Xr7PApdCZIerSOtKyCxbzYS396w9DEKDU4DcGDcAuap
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereMachineConfig
+metadata:
+  annotations:
+    anywhere.eks.amazonaws.com/etcd: "true"
+  name: gitops-etcd
+  namespace: default
+spec:
+  datastore: /Cloud/datastore/PUREM10:DS01
+  diskGiB: 25
+  folder: ""
+  memoryMiB: 8192
+  numCPUs: 2
+  osFamily: bottlerocket
+  resourcePool: /Cloud/host/Physical/Resources
+  template: /Cloud/vm/Templates/bottlerocket-v1.22.6-kubernetes-1-22-eks-4-amd64-d1d3e65
+  users:
+  - name: ec2-user
+    sshAuthorizedKeys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCca0OQ0T6VTKiFkzy3Yco/oMZXfT2mEFDvgsIpkt6SJnbMFhoTGW9xze4aiqTnp0geLRgYh1xKKyiZzTr7yfjAD7p6O3ZF787oNNGB0p+xQvXyTfxLgYPdMWeJ2omtOqhvrs9WHbb69a/ZCOrGayGB6TGiiva0zSgkrxwCYPTAmVI+u3l1gSJIs+SZ6seK2jRqViMwuIz73oIcXWFct/Tj3CQuQPv053VCOpx44+7ybPf2J+FoI4v8T8MVp6Yg2Fuq8B/d0BpwWWZ1KHUwywf5oYAAd8Le2Z0R5ix4jj6V9Xr7PApdCZIerSOtKyCxbzYS396w9DEKDU4DcGDcAuap
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereMachineConfig
+metadata:
+  name: gitops
+  namespace: default
+spec:
+  datastore: /Cloud/datastore/PUREM10:DS01
+  diskGiB: 25
+  folder: ""
+  memoryMiB: 16384
+  numCPUs: 4
+  osFamily: bottlerocket
+  resourcePool: /Cloud/host/Physical/Resources
+  template: /Cloud/vm/Templates/bottlerocket-v1.22.6-kubernetes-1-22-eks-4-amd64-d1d3e65
+  users:
+  - name: ec2-user
+    sshAuthorizedKeys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCca0OQ0T6VTKiFkzy3Yco/oMZXfT2mEFDvgsIpkt6SJnbMFhoTGW9xze4aiqTnp0geLRgYh1xKKyiZzTr7yfjAD7p6O3ZF787oNNGB0p+xQvXyTfxLgYPdMWeJ2omtOqhvrs9WHbb69a/ZCOrGayGB6TGiiva0zSgkrxwCYPTAmVI+u3l1gSJIs+SZ6seK2jRqViMwuIz73oIcXWFct/Tj3CQuQPv053VCOpx44+7ybPf2J+FoI4v8T8MVp6Yg2Fuq8B/d0BpwWWZ1KHUwywf5oYAAd8Le2Z0R5ix4jj6V9Xr7PApdCZIerSOtKyCxbzYS396w9DEKDU4DcGDcAuap
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: GitOpsConfig
+metadata:
+  name: cluster-gitops
+  namespace: default
+spec:
+  flux:
+    github:
+      branch: main
+      clusterConfigPath: clusters/gitops
+      fluxSystemNamespace: flux-system
+      owner: esara
+      personal: true
+      repository: eks-anywhere-gitops
+
+---
